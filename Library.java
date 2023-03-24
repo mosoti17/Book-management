@@ -29,13 +29,19 @@ public class Library {
                 option = joptionUi.selectOption();
                 switch (option) {
                     case 1 -> {
-                        joptionUi.createNewBook(connection);
+                        Book book = new Book();
+                        joptionUi.createNewBook(connection, false, book);
                     }
                     case 2 -> {
                         ArrayList<Book> books = Library.getExistingBooks(connection);
                         joptionUi.displayAllBooks(books);
                     }
                     case 3 -> {
+                        int bookId = joptionUi.updateBook();
+                        Book book = Library.getBook(connection,bookId);
+                        joptionUi.createNewBook(connection, true, book);
+                    }
+                    case 4 -> {
                         int bookId = joptionUi.deleteBook();
                         Library.delete(connection, bookId);
                     }
@@ -87,6 +93,35 @@ public class Library {
         preparedStatement.setInt(1, bookId);
 
         preparedStatement.executeUpdate();
+
+
+    }
+
+    public static Book getBook(Connection connection, int bookId) throws SQLException {
+        PreparedStatement stmt = connection.prepareStatement("select * from Books where id = ?");
+        stmt.setInt(1, bookId);
+        ResultSet resultSet = stmt.executeQuery();
+        Book book;
+        while (resultSet.next()) {
+
+            book = new Book(resultSet.getString("title"),
+                    resultSet.getString("author"),
+                    resultSet.getString("isbn"),
+                    resultSet.getString("datePublished"),
+                    resultSet.getInt("numberOfPages"),
+                    resultSet.getString("edition"),
+                    resultSet.getString("genre"),
+                    resultSet.getDouble("price"));
+            book.setId(resultSet.getInt("id"));
+
+            return book;
+
+        }
+
+        resultSet.close();
+        stmt.close();
+
+        return null;
 
 
     }

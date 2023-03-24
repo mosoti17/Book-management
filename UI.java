@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class UI {
 
 
-    public void createNewBook(Connection connection) throws SQLException {
+    public void createNewBook(Connection connection, boolean isUpdate, Book book) throws SQLException {
 
         JTextField titleField = new JTextField(40);
         JTextField isbnField = new JTextField(40);
@@ -17,6 +17,17 @@ public class UI {
         JTextField editionField = new JTextField(40);
         JTextField dateField = new JTextField(40);
         JTextField genreField = new JTextField(40);
+        if (isUpdate) {
+            genreField.setText(book.getGenre());
+            dateField.setText(book.getDatePublished());
+            editionField.setText(book.getEdition());
+            authorField.setText(book.getAuthor());
+            priceField.setText(String.valueOf(book.getPrice()));
+            isbnField.setText(book.getISBN());
+            titleField.setText(book.getTitle());
+            titleField.setText(book.getTitle());
+            pagesField.setText(String.valueOf(book.getNumberOfPages()));
+        }
 
 
         JPanel myPanel = new JPanel(new GridLayout(18, 1, 5, 1));
@@ -42,19 +53,24 @@ public class UI {
 //        myPanel.setMaximumSize(new Dimension(300, 500));
 
         int result = JOptionPane.showConfirmDialog(null, myPanel,
-                "Enter book details", JOptionPane.OK_CANCEL_OPTION);
+                isUpdate? "Update book details" : "Enter book details", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            Book book = new Book(
-                    titleField.getText(),
-                    authorField.getText(),
-                    isbnField.getText(),
-                    dateField.getText(),
-                    Integer.parseInt(pagesField.getText()),
-                    editionField.getText(),
-                    genreField.getText(),
-                    Double.parseDouble(priceField.getText()));
+            book.setTitle(titleField.getText());
+            book.setAuthor(authorField.getText());
+            book.setISBN(isbnField.getText());
+            book.setDatePublished(dateField.getText());
+            book.setNumberOfPages(Integer.parseInt(pagesField.getText()));
+            book.setEdition(editionField.getText());
+            book.setGenre(genreField.getText());
+            book.setPrice(Double.parseDouble(priceField.getText()));
+
             book.printBook();
-            book.insertIntoBook(connection);
+            if (isUpdate) {
+                book.updateBook(connection);
+            } else {
+                book.insertIntoBook(connection);
+            }
+
 
         }
     }
@@ -62,13 +78,19 @@ public class UI {
 
     public int selectOption() {
         JFrame f = new JFrame();
-        String input = JOptionPane.showInputDialog(f," 1: Add book\n2: View All Books\n3: Delete a book\n5: Exit","Enter a option", 1);
+        String input = JOptionPane.showInputDialog(f, " 1: Add book\n2: View All Books\n3: Update book\n4: Delete a book\n5: Exit", "Enter a option", 1);
         return Integer.parseInt(input);
     }
 
     public int deleteBook() {
         JFrame f = new JFrame();
-        String input = JOptionPane.showInputDialog(f,"Book id","Delete book", 1);
+        String input = JOptionPane.showInputDialog(f, "Book id", "Delete book", 1);
+        return Integer.parseInt(input);
+    }
+
+    public int updateBook() {
+        JFrame f = new JFrame();
+        String input = JOptionPane.showInputDialog(f, "Book id", "Update book", 1);
         return Integer.parseInt(input);
     }
 
