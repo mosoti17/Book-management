@@ -1,25 +1,46 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Library {
     public static void main(String arg[]) {
         Connection connection = null;
         try {
+            UI joptionUi = new UI();
+
             connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
             String createTableQuery = "CREATE TABLE IF NOT EXISTS   Books " +
-                    "(id INTEGER not NULL, " +
+                    "(" +
+                    "id INTEGER not NULL AUTO_INCREMENT, " +
+                    " isbn VARCHAR(255), " +
                     " title VARCHAR(255), " +
                     " datePublished VARCHAR(30), " +
                     " numberOfPages INTEGER, " +
+                    " author VARCHAR(255), " +
                     " edition VARCHAR(255), " +
                     " genre VARCHAR(30), " +
-                    " description VARCHAR(1000), " +
-                    " PRIMARY KEY ( id ))";
+                    " price DECIMAL(15,2), " +
+                    " PRIMARY KEY ( id )" +
+                    ")";
             Statement stmt = connection.createStatement();
             stmt.executeUpdate(createTableQuery);
-            //Book book = new Book("Test 2", "Elvis", "20/10/2022", 100, "1st", "computer", "Computer book");
-            //book.insertIntoBook(connection, 3);
-            Library.delete(connection, 1);
-            Library.getExistingBooks(connection);
+
+            int option;
+            do {
+                option = joptionUi.selectOption();
+                switch (option) {
+                    case 1 -> {
+                        joptionUi.createNewBook(connection);
+                    }
+                    case 2 -> {
+                        ArrayList<Book> books =  Library.getExistingBooks(connection);
+                        joptionUi.displayAllBooks(books);
+
+                    }
+                    default -> {
+                    }
+                }
+            } while (option < 5);
+
         } catch (Exception exception) {
             System.out.println(exception);
 
@@ -27,47 +48,30 @@ public class Library {
 
     }
 
-    public static void insertIntoBook(Connection connection, Book book) throws SQLException {
-        String INSERT_USERS_SQL = "INSERT INTO Books" +
-                "  (id,title, datePublished, numberOfPages, edition, genre, description) VALUES " +
-                " (?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
-        preparedStatement.setInt(1, 2);
-        preparedStatement.setString(2, book.getTitle());
-        preparedStatement.setString(3, book.getDatePublished());
-        preparedStatement.setInt(4, book.getNumberOfPages());
-        preparedStatement.setString(5, book.getEdition());
-        preparedStatement.setString(6, book.getGenre());
-        preparedStatement.setString(7, book.getDescription());
-
-        System.out.println(preparedStatement);
-
-        preparedStatement.executeUpdate();
-
-    }
-
-
-    public static void getExistingBooks(Connection connection) throws SQLException {
+    public static ArrayList<Book> getExistingBooks(Connection connection) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(
                 "select * from Books");
-        Book book;
+        ArrayList<Book> books = new ArrayList<Book>();
         while (resultSet.next()) {
+            Book book;
             book = new Book(resultSet.getString("title"),
-                    resultSet.getString("datePublished"),
+                    resultSet.getString("author"),
+                    resultSet.getString("isbn"),
                     resultSet.getString("datePublished"),
                     resultSet.getInt("numberOfPages"),
                     resultSet.getString("edition"),
                     resultSet.getString("genre"),
-                    resultSet.getString("description"));
+                    resultSet.getDouble("price"));
             book.setId(resultSet.getInt("id"));
-
-            book.printBook();
+            books.add(book);
 
         }
 
         resultSet.close();
         stmt.close();
+
+        return books;
 
     }
 

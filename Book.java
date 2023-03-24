@@ -1,13 +1,17 @@
 import java.sql.*;
 
 public class Book {
+
     private String title;
     private String author;
+    private String ISBN;
     private String datePublished;
     private int numberOfPages;
     private String edition;
     private String genre;
-    private String description;
+    private double price;
+
+
     private int id;
 
     public int getId() {
@@ -18,15 +22,18 @@ public class Book {
         this.id = id;
     }
 
-    public Book(String title, String author, String datePublished, int numberOfPages, String edition, String genre, String description) {
+
+    public Book(String title, String author, String ISBN, String datePublished, int numberOfPages, String edition, String genre, double price) {
         this.title = title;
         this.author = author;
+        this.ISBN = ISBN;
         this.datePublished = datePublished;
         this.numberOfPages = numberOfPages;
         this.edition = edition;
         this.genre = genre;
-        this.description = description;
+        this.price = price;
     }
+
 
     public String getTitle() {
         return title;
@@ -76,27 +83,37 @@ public class Book {
         this.genre = genre;
     }
 
-    public String getDescription() {
-        return description;
+    public String getISBN() {
+        return ISBN;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void printBook() {
-        System.out.println("Id: "+ this.id +"\nTitle: "+ this.title + "\nDate published :" + this.datePublished +"\nNumber Of Pages: "+ this.numberOfPages+ "\nEdition:"+ this.edition + "\nGenre:" + this.genre +"\nDescription: "+ this.description + "\n------------------------ \n");
+        System.out.println("Id: "+ this.id +"\nTitle: "+ this.title + "ISBN: "+ this.ISBN +"\nAuthor: "+ this.author + "\nDate published :" + this.datePublished +"\nNumber Of Pages: "+ this.numberOfPages+ "\nEdition:"+ this.edition + "\nGenre:" + this.genre +"\nPrice: "+ this.price + "\n------------------------ \n");
     }
 
     public void createBookTable(Connection connection) throws SQLException{
         String createTableQuery = "CREATE TABLE IF NOT EXISTS   Books " +
-                "(id INTEGER not NULL, " +
+                "(id INTEGER not NULL AUTO_INCREMENT, " +
+                " isbn VARCHAR(255), " +
                 " title VARCHAR(255), " +
                 " datePublished VARCHAR(30), " +
                 " numberOfPages INTEGER, " +
+                " author VARCHAR(255, " +
                 " edition VARCHAR(255), " +
                 " genre VARCHAR(30), " +
-                " description VARCHAR(1000), " +
+                " price DECIMAL(15,2), " +
                 " PRIMARY KEY ( id ))";
         Statement stmt = connection.createStatement();
         stmt.executeUpdate(createTableQuery);
@@ -104,18 +121,19 @@ public class Book {
 
     }
 
-    public  void insertIntoBook(Connection connection, int id) throws SQLException {
+    public  void insertIntoBook(Connection connection) throws SQLException {
         String INSERT_USERS_SQL = "INSERT INTO Books" +
-                "  (id,title, datePublished, numberOfPages, edition, genre, description) VALUES " +
-                " (?, ?, ?, ?, ?, ?, ?);";
+                "  (title, isbn, datePublished, numberOfPages, author, edition, genre, price) VALUES " +
+                " (?, ?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
-        preparedStatement.setInt(1, id);
-        preparedStatement.setString(2, this.title);
-        preparedStatement.setString(3, this.datePublished);
+        preparedStatement.setString(1, this.getTitle());
+        preparedStatement.setString(2, this.getISBN());
+        preparedStatement.setString(3, this.getDatePublished());
         preparedStatement.setInt(4, this.getNumberOfPages());
-        preparedStatement.setString(5, this.getEdition());
-        preparedStatement.setString(6, this.getGenre());
-        preparedStatement.setString(7, this.getDescription());
+        preparedStatement.setString(5, this.getAuthor());
+        preparedStatement.setString(6, this.getEdition());
+        preparedStatement.setString(7, this.getGenre());
+        preparedStatement.setDouble(8, this.getPrice());
 
         System.out.println(preparedStatement);
 
