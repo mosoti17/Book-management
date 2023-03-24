@@ -62,7 +62,7 @@ public class UI {
 
     public int selectOption() {
         JFrame f = new JFrame();
-        String input = JOptionPane.showInputDialog(f," 1: Add book\n2: View All Books\n2: Delete a book\n5: Exit","Enter a option", 1);
+        String input = JOptionPane.showInputDialog(f," 1: Add book\n2: View All Books\n3: Delete a book\n5: Exit","Enter a option", 1);
         return Integer.parseInt(input);
     }
 
