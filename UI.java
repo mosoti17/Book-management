@@ -66,6 +66,12 @@ public class UI {
         return Integer.parseInt(input);
     }
 
+    public int deleteBook() {
+        JFrame f = new JFrame();
+        String input = JOptionPane.showInputDialog(f,"Book id","Delete book", 1);
+        return Integer.parseInt(input);
+    }
+
 
     public void displayAllBooks(ArrayList<Book> books) throws SQLException {
         JPanel myPanel = new JPanel(new GridLayout(0, 9, 0, 0));

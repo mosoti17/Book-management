@@ -32,9 +32,12 @@ public class Library {
                         joptionUi.createNewBook(connection);
                     }
                     case 2 -> {
-                        ArrayList<Book> books =  Library.getExistingBooks(connection);
+                        ArrayList<Book> books = Library.getExistingBooks(connection);
                         joptionUi.displayAllBooks(books);
-
+                    }
+                    case 3 -> {
+                        int bookId = joptionUi.deleteBook();
+                        Library.delete(connection, bookId);
                     }
                     default -> {
                     }
