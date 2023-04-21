@@ -4,9 +4,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class containing all the views to visualize the app
+ */
 public class UI {
 
-
+    /**
+     *
+     * @param connection the database connection
+     * @param isUpdate If we are updating a book or creating a new one
+     * @param book Book to write to DB or update
+     * @throws SQLException
+     */
     public void createNewBook(Connection connection, boolean isUpdate, Book book) throws SQLException {
 
         JTextField titleField = new JTextField(40);
@@ -48,9 +57,6 @@ public class UI {
         myPanel.add(new JLabel("Date Published:"));
         myPanel.add(dateField);
 
-//        myPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-//        myPanel.setPreferredSize(new Dimension(300, 500));
-//        myPanel.setMaximumSize(new Dimension(300, 500));
 
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 isUpdate? "Update book details" : "Enter book details", JOptionPane.OK_CANCEL_OPTION);
@@ -75,26 +81,42 @@ public class UI {
         }
     }
 
-
+    /**
+     * Initial view to prompt user to select what she would like to do
+     * @return
+     */
     public int selectOption() {
         JFrame f = new JFrame();
         String input = JOptionPane.showInputDialog(f, " 1: Add book\n2: View All Books\n3: Update book\n4: Delete a book\n5: Exit", "Enter a option", 1);
         return Integer.parseInt(input);
     }
 
+    /**
+     * Prompts user to enter id to delete
+     *
+     * @return int of the id in the database
+     */
     public int deleteBook() {
         JFrame f = new JFrame();
         String input = JOptionPane.showInputDialog(f, "Book id", "Delete book", 1);
         return Integer.parseInt(input);
     }
 
+    /**
+     * Book to update
+     * @return int of the id in the database
+     */
     public int updateBook() {
         JFrame f = new JFrame();
         String input = JOptionPane.showInputDialog(f, "Book id", "Update book", 1);
         return Integer.parseInt(input);
     }
 
-
+    /**
+     * Displays a list of books
+     * @param books List of all books in the Db
+     * @throws SQLException
+     */
     public void displayAllBooks(ArrayList<Book> books) throws SQLException {
         JPanel myPanel = new JPanel(new GridLayout(0, 9, 0, 0));
         myPanel.add(new JLabel("Id"));

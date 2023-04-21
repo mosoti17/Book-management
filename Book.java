@@ -1,5 +1,8 @@
 import java.sql.*;
 
+/**
+ * Model to manage book
+ */
 public class Book {
 
     private String title;
@@ -26,6 +29,17 @@ public class Book {
 
     }
 
+    /**
+     * MAiin constructor for a book
+     * @param title
+     * @param author
+     * @param ISBN
+     * @param datePublished
+     * @param numberOfPages
+     * @param edition
+     * @param genre
+     * @param price
+     */
     public Book(String title, String author, String ISBN, String datePublished, int numberOfPages, String edition, String genre, double price) {
         this.title = title;
         this.author = author;
@@ -102,27 +116,19 @@ public class Book {
         this.price = price;
     }
 
+    /**
+     * Display a book on the console
+     */
     public void printBook() {
         System.out.println("Id: " + this.id + "\nTitle: " + this.title + "ISBN: " + this.ISBN + "\nAuthor: " + this.author + "\nDate published :" + this.datePublished + "\nNumber Of Pages: " + this.numberOfPages + "\nEdition:" + this.edition + "\nGenre:" + this.genre + "\nPrice: " + this.price + "\n------------------------ \n");
     }
 
-    public void createBookTable(Connection connection) throws SQLException {
-        String createTableQuery = "CREATE TABLE IF NOT EXISTS   Books " +
-                "(id INTEGER not NULL AUTO_INCREMENT, " +
-                " isbn VARCHAR(255), " +
-                " title VARCHAR(255), " +
-                " datePublished VARCHAR(30), " +
-                " numberOfPages INTEGER, " +
-                " author VARCHAR(255, " +
-                " edition VARCHAR(255), " +
-                " genre VARCHAR(30), " +
-                " price DECIMAL(15,2), " +
-                " PRIMARY KEY ( id ))";
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate(createTableQuery);
 
-
-    }
+    /**
+     * Insert book into the database
+     * @param connection connection to the database
+     * @throws SQLException
+     */
 
     public void insertIntoBook(Connection connection) throws SQLException {
         String INSERT_USERS_SQL = "INSERT INTO Books" +
@@ -144,6 +150,11 @@ public class Book {
 
     }
 
+    /**
+     * Update the book in the database
+     * @param connection connection to the database
+     * @throws SQLException
+     */
     public void updateBook(Connection connection) throws SQLException {
         String INSERT_USERS_SQL = "UPDATE  Books SET title= ?, isbn= ?, datePublished= ?, numberOfPages = ?,  author= ?, edition = ?, genre= ?, price=? where id= ? ";
         PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);

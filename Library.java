@@ -8,6 +8,7 @@ public class Library {
             UI joptionUi = new UI();
 
             connection = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+           //Create the table Books if it does not exiist
             String createTableQuery = "CREATE TABLE IF NOT EXISTS   Books " +
                     "(" +
                     "id INTEGER not NULL AUTO_INCREMENT, " +
@@ -57,6 +58,12 @@ public class Library {
 
     }
 
+    /**
+     *
+     * @param connection
+     * @return List of books that were on the DB
+     * @throws SQLException
+     */
     public static ArrayList<Book> getExistingBooks(Connection connection) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(
@@ -84,7 +91,12 @@ public class Library {
 
     }
 
-
+    /**
+     *
+     * @param connection the database connectio
+     * @param bookId id on the database for the book to be deleted
+     * @throws SQLException
+     */
     public static void delete(Connection connection, int bookId) throws SQLException {
 
         Statement statement = connection.createStatement();
@@ -97,6 +109,13 @@ public class Library {
 
     }
 
+    /**
+     *
+     * @param connection the database connection
+     * @param bookId id on the database for the book to be retrieved
+     * @return Book fetched from the DB or null.
+     * @throws SQLException
+     */
     public static Book getBook(Connection connection, int bookId) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement("select * from Books where id = ?");
         stmt.setInt(1, bookId);
